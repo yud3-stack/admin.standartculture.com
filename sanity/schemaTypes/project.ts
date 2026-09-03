@@ -6,18 +6,9 @@ export const projectType = defineType({
   type: 'document',
 
   groups: [
-    {
-      name: 'general',
-      title: 'General',
-    },
-    {
-      name: 'media',
-      title: 'Media',
-    },
-    {
-      name: 'content',
-      title: 'Content',
-    },
+    {name: 'general', title: 'General'},
+    {name: 'media', title: 'Media'},
+    {name: 'content', title: 'Content'},
   ],
 
   fields: [
@@ -36,13 +27,9 @@ export const projectType = defineType({
     defineField({
       name: 'slug',
       title: 'Slug',
-      type: 'slug',
+      description: 'EN and TR routes use different slugs (e.g. "culture-arts" vs "kultur-sanat").',
+      type: 'localeSlug',
       group: 'general',
-      options: {
-        source: 'title.en',
-        maxLength: 96,
-      },
-      validation: (Rule) => Rule.required(),
     }),
 
     defineField({
@@ -58,8 +45,7 @@ export const projectType = defineType({
       title: 'Year',
       type: 'number',
       group: 'general',
-      validation: (Rule) =>
-        Rule.required().integer().min(2000).max(2100),
+      validation: (Rule) => Rule.required().integer().min(2000).max(2100),
     }),
 
     defineField({
@@ -70,12 +56,20 @@ export const projectType = defineType({
     }),
 
     defineField({
-      name: 'featured',
-      title: 'Featured Project',
-      description: 'Show this project in Selected Work.',
-      type: 'boolean',
+      name: 'services',
+      title: 'Services',
+      type: 'array',
       group: 'general',
-      initialValue: false,
+      of: [{type: 'localeString'}],
+    }),
+
+    defineField({
+      name: 'order',
+      title: 'Order',
+      description: 'Controls display order and the "PROJECT 01 / 02 / ..." numbering — computed automatically from this, not typed by hand.',
+      type: 'number',
+      group: 'general',
+      validation: (Rule) => Rule.integer(),
     }),
 
     // =====================================================
@@ -83,11 +77,20 @@ export const projectType = defineType({
     // =====================================================
 
     defineField({
+      name: 'color',
+      title: 'Accent Color',
+      description: 'Used as the project\'s visual block wherever a real image is not yet set.',
+      type: 'string',
+      group: 'media',
+      validation: (Rule) =>
+        Rule.required().regex(/^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/, {name: 'hex color'}),
+    }),
+
+    defineField({
       name: 'coverImage',
       title: 'Cover Image',
       type: 'imageWithAlt',
       group: 'media',
-      validation: (Rule) => Rule.required(),
     }),
 
     defineField({
@@ -95,12 +98,7 @@ export const projectType = defineType({
       title: 'Gallery',
       type: 'array',
       group: 'media',
-
-      of: [
-        {
-          type: 'imageWithAlt',
-        },
-      ],
+      of: [{type: 'imageWithAlt'}],
     }),
 
     // =====================================================
@@ -110,46 +108,23 @@ export const projectType = defineType({
     defineField({
       name: 'content',
       title: 'Project Content',
+      description: 'Not yet rendered on the live site — reserved for future use.',
       type: 'object',
       group: 'content',
 
       fields: [
-        defineField({
-          name: 'tr',
-          title: 'Türkçe',
-          type: 'array',
-          of: [
-            {
-              type: 'block',
-            },
-          ],
-        }),
-
-        defineField({
-          name: 'en',
-          title: 'English',
-          type: 'array',
-          of: [
-            {
-              type: 'block',
-            },
-          ],
-        }),
+        defineField({name: 'tr', title: 'Türkçe', type: 'array', of: [{type: 'block'}]}),
+        defineField({name: 'en', title: 'English', type: 'array', of: [{type: 'block'}]}),
       ],
     }),
+  ],
 
-    defineField({
-      name: 'services',
-      title: 'Services',
-      type: 'array',
-      group: 'general',
-
-      of: [
-        {
-          type: 'string',
-        },
-      ],
-    }),
+  orderings: [
+    {
+      title: 'Display order',
+      name: 'orderAsc',
+      by: [{field: 'order', direction: 'asc'}],
+    },
   ],
 
   preview: {

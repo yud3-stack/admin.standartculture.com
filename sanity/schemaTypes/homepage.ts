@@ -5,7 +5,13 @@ export const homepageType = defineType({
   title: 'Homepage',
   type: 'document',
 
-  groups: [ { name: 'hero', title: 'Hero', }, { name: 'about', title: 'About', }, { name: 'business', title: 'Business', }, { name: 'references', title: 'References', }, { name: 'projects', title: 'Projects', }, { name: 'contact', title: 'Contact', }, ],
+  groups: [
+    {name: 'hero', title: 'Hero'},
+    {name: 'about', title: 'About'},
+    {name: 'business', title: 'Business'},
+    {name: 'references', title: 'References'},
+    {name: 'selectedWork', title: 'Selected Work'},
+  ],
 
   fields: [
     // =====================================================
@@ -22,9 +28,15 @@ export const homepageType = defineType({
         defineField({
           name: 'words',
           title: 'Title Words',
+          description: 'The 4 words of the big headline.',
           type: 'object',
 
-          fields: [ defineField({ name: 'word1', title: 'Word 1', type: 'localeString', validation: (Rule) => Rule.required(), }), defineField({ name: 'word2', title: 'Word 2', type: 'localeString', validation: (Rule) => Rule.required(), }), defineField({ name: 'word3', title: 'Word 3', type: 'localeString', validation: (Rule) => Rule.required(), }), defineField({ name: 'word4', title: 'Word 4', type: 'localeString', validation: (Rule) => Rule.required(), }), ]
+          fields: [
+            defineField({name: 'word1', title: 'Word 1', type: 'localeString', validation: (Rule) => Rule.required()}),
+            defineField({name: 'word2', title: 'Word 2', type: 'localeString', validation: (Rule) => Rule.required()}),
+            defineField({name: 'word3', title: 'Word 3', type: 'localeString', validation: (Rule) => Rule.required()}),
+            defineField({name: 'word4', title: 'Word 4', type: 'localeString', validation: (Rule) => Rule.required()}),
+          ],
         }),
 
         defineField({
@@ -35,7 +47,8 @@ export const homepageType = defineType({
 
         defineField({
           name: 'categories',
-          title: 'Culture Categories',
+          title: 'Fan Cards',
+          description: 'The 5 floating image cards behind the headline.',
           type: 'array',
 
           of: [
@@ -66,15 +79,10 @@ export const homepageType = defineType({
               ],
 
               preview: {
-                select: {
-                  title: 'label.en',
-                  media: 'image',
-                  order: 'order',
-                },
-
+                select: {title: 'label.en', media: 'image', order: 'order'},
                 prepare({title, media, order}) {
                   return {
-                    title: title || 'Category',
+                    title: title || 'Card',
                     subtitle: order !== undefined ? `Order: ${order}` : undefined,
                     media,
                   }
@@ -82,119 +90,15 @@ export const homepageType = defineType({
               },
             },
           ],
+
+          validation: (Rule) => Rule.max(5),
         }),
 
         defineField({
-          name: 'button',
-          title: 'Button',
-          type: 'object',
-
-          fields: [
-            defineField({
-              name: 'text',
-              title: 'Text',
-              type: 'localeString',
-            }),
-
-            defineField({
-              name: 'link',
-              title: 'Link',
-              type: 'url',
-            }),
-          ],
-        }),
-      ],
-    }),
-
-    // =====================================================
-    // CULTURE
-    // =====================================================
-
-    defineField({
-      name: 'culture',
-      title: 'Culture',
-      type: 'object',
-      group: 'culture',
-
-      fields: [
-        defineField({
-          name: 'eyebrow',
-          title: 'Eyebrow',
+          name: 'ctaText',
+          title: 'Button Text',
+          description: '"Explore our work" button. Destination is fixed in code.',
           type: 'localeString',
-        }),
-
-        defineField({
-          name: 'title',
-          title: 'Title',
-          type: 'localeString',
-        }),
-
-        defineField({
-          name: 'description',
-          title: 'Description',
-          type: 'localeText',
-        }),
-
-        defineField({
-          name: 'cards',
-          title: 'Culture Cards',
-          type: 'array',
-
-          of: [
-            {
-              type: 'object',
-
-              fields: [
-                defineField({
-                  name: 'title',
-                  title: 'Title',
-                  type: 'localeString',
-                  validation: (Rule) => Rule.required(),
-                }),
-
-                defineField({
-                  name: 'description',
-                  title: 'Description',
-                  type: 'localeText',
-                }),
-
-                defineField({
-                  name: 'image',
-                  title: 'Image',
-                  type: 'imageWithAlt',
-                }),
-
-                defineField({
-                  name: 'link',
-                  title: 'Link',
-                  type: 'url',
-                }),
-
-                defineField({
-                  name: 'order',
-                  title: 'Order',
-                  type: 'number',
-                  validation: (Rule) => Rule.integer(),
-                }),
-              ],
-
-              preview: {
-                select: {
-                  title: 'title.en',
-                  media: 'image',
-                  order: 'order',
-                },
-
-                prepare({title, media, order}) {
-                  return {
-                    title: title || 'Culture Card',
-                    subtitle: order !== undefined ? `Order: ${order}` : undefined,
-                    media,
-                  }
-                },
-              },
-            },
-          ],
         }),
       ],
     }),
@@ -209,7 +113,11 @@ export const homepageType = defineType({
       type: 'object',
       group: 'about',
 
-      fields: [ defineField({ name: 'label', title: 'Label', type: 'localeString', }), defineField({ name: 'title', title: 'Title', type: 'localeString', validation: (Rule) => Rule.required(), }), defineField({ name: 'description', title: 'Description', type: 'localeText', }), ]
+      fields: [
+        defineField({name: 'label', title: 'Label', type: 'localeString'}),
+        defineField({name: 'title', title: 'Title', type: 'localeString', validation: (Rule) => Rule.required()}),
+        defineField({name: 'description', title: 'Description', type: 'localeText'}),
+      ],
     }),
 
     // =====================================================
@@ -222,7 +130,40 @@ export const homepageType = defineType({
       type: 'object',
       group: 'business',
 
-      fields: [ defineField({ name: 'label', title: 'Label', type: 'localeString', }), defineField({ name: 'title', title: 'Title', type: 'localeString', validation: (Rule) => Rule.required(), }), defineField({ name: 'description', title: 'Description', type: 'localeText', }), ]
+      fields: [
+        defineField({
+          name: 'titleBefore',
+          title: 'Title (before highlight)',
+          type: 'localeString',
+        }),
+
+        defineField({
+          name: 'titleHighlight',
+          title: 'Title (highlighted part)',
+          type: 'localeString',
+          validation: (Rule) => Rule.required(),
+        }),
+
+        defineField({
+          name: 'titleAfter',
+          title: 'Title (after highlight)',
+          type: 'localeString',
+        }),
+
+        defineField({
+          name: 'cta',
+          title: 'Button Text',
+          type: 'localeString',
+        }),
+
+        defineField({
+          name: 'images',
+          title: 'Gallery Images',
+          description: 'Images shown in the business slider.',
+          type: 'array',
+          of: [{type: 'imageWithAlt'}],
+        }),
+      ],
     }),
 
     // =====================================================
@@ -237,23 +178,10 @@ export const homepageType = defineType({
 
       fields: [
         defineField({
-          name: 'eyebrow',
-          title: 'Eyebrow',
-          type: 'localeString',
-        }),
-
-        defineField({
-          name: 'title',
-          title: 'Title',
-          type: 'localeString',
-        }),
-
-        defineField({
           name: 'logos',
           title: 'Client Logos',
           type: 'array',
-
-          of: [ { type: 'imageWithAlt', }, ]
+          of: [{type: 'imageWithAlt'}],
         }),
       ],
     }),
@@ -269,109 +197,41 @@ export const homepageType = defineType({
       group: 'selectedWork',
 
       fields: [
+        defineField({name: 'eyebrow', title: 'Eyebrow', type: 'localeString'}),
+        defineField({name: 'title', title: 'Title', type: 'localeString', validation: (Rule) => Rule.required()}),
+
         defineField({
-          name: 'eyebrow',
-          title: 'Eyebrow',
+          name: 'action',
+          title: 'Card Button Text',
+          description: 'Text shown on each project card, e.g. "Explore".',
           type: 'localeString',
         }),
 
         defineField({
-          name: 'title',
-          title: 'Title',
+          name: 'viewAll',
+          title: '"View All" Link Text',
+          description: 'Text for the link to the full projects page, e.g. "Our works".',
           type: 'localeString',
-          validation: (Rule) => Rule.required(),
         }),
 
         defineField({
-          name: 'description',
-          title: 'Description',
-          type: 'localeText',
-        }),
-
-        defineField({
-          name: 'button',
-          title: 'Button',
+          name: 'allProjectsPage',
+          title: 'All Projects Page',
+          description: 'Header text for the standalone /projects page.',
           type: 'object',
 
           fields: [
-            defineField({
-              name: 'text',
-              title: 'Text',
-              type: 'localeString',
-            }),
-
-            defineField({
-              name: 'link',
-              title: 'Link',
-              type: 'url',
-            }),
+            defineField({name: 'title', title: 'Title', type: 'localeString'}),
+            defineField({name: 'description', title: 'Description', type: 'localeText'}),
           ],
         }),
 
         defineField({
           name: 'projects',
           title: 'Projects',
-          description: 'Projects will reference the Project document type.',
+          description: 'Pulled from the Project collection — do not duplicate project data here.',
           type: 'array',
-
-          of: [
-            {
-              type: 'reference',
-              to: [{type: 'project'}],
-            },
-          ],
-        }),
-      ],
-    }),
-
-    // =====================================================
-    // CTA
-    // =====================================================
-
-    defineField({
-      name: 'cta',
-      title: 'CTA',
-      type: 'object',
-      group: 'cta',
-
-      fields: [
-        defineField({
-          name: 'eyebrow',
-          title: 'Eyebrow',
-          type: 'localeString',
-        }),
-
-        defineField({
-          name: 'title',
-          title: 'Title',
-          type: 'localeString',
-          validation: (Rule) => Rule.required(),
-        }),
-
-        defineField({
-          name: 'description',
-          title: 'Description',
-          type: 'localeText',
-        }),
-
-        defineField({
-          name: 'button',
-          title: 'Button',
-          type: 'object',
-
-          fields: [
-            defineField({
-              name: 'text',
-              title: 'Text',
-              type: 'localeString',
-            }),
-
-            defineField({
-              name: 'link',
-              title: 'Link',
-              type: 'url',
-            }),
-          ],
+          of: [{type: 'reference', to: [{type: 'project'}]}],
         }),
       ],
     }),
